@@ -7,6 +7,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using QuizBit.Resources;
+using System.IO.IsolatedStorage;
 
 namespace QuizBit
 {
@@ -17,6 +18,9 @@ namespace QuizBit
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
+
+        internal QuizletAuthService authService;
+        internal QuizBitSession session;
 
         /// <summary>
         /// Constructor for the Application object.
@@ -112,11 +116,21 @@ namespace QuizBit
             if (phoneApplicationInitialized)
                 return;
 
+            session = new QuizBitSession(IsolatedStorageSettings.ApplicationSettings);
+            authService = new QuizletAuthService(
+                UserAppResources.QuizletClientID,
+                UserAppResources.QuizletSecret,
+                UserAppResources.QuizletScope);
+
             // Create the frame but don't set it as RootVisual yet; this allows the splash
             // screen to remain active until the application is ready to render.
             RootFrame = new PhoneApplicationFrame();
 
             RootFrame.UriMapper = new AssociationUriMapper();
+
+            InitializeComponent();
+
+
 
             RootFrame.Navigated += CompleteInitializePhoneApplication;
 

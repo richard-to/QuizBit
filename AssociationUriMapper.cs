@@ -1,5 +1,7 @@
-﻿using System;
+﻿using QuizBit.Resources;
+using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,31 +10,39 @@ namespace QuizBit
 {
     class AssociationUriMapper : System.Windows.Navigation.UriMapperBase
     {
+        public const string URI_MAIN = "/MainPage.xaml";
+        public const string URI_SIGNIN = "/SignIn.xaml";
+
         public override Uri MapUri(Uri uri)
         {
             string tempUri = Uri.UnescapeDataString(uri.ToString());
-            if (tempUri.Contains("to.richard-quizbit://authorized"))
+            if (tempUri.Contains(URI_SIGNIN))
             {
-                char[] uriDelimiters = {'?', '=', '&'};
-                string[] uriParameters = tempUri.Split(uriDelimiters);
-                string code = "";
-                string state = "";
-                if (uriParameters[3] == "state")
-                {
-                    state = uriParameters[4];
-                }
-
-                if (uriParameters[5] == "code")
-                {
-                    code = uriParameters[6];
-                }
-
-                return new Uri("/MainPage.xaml?" + 
-                    "code=" + code + "&" +
-                    "state=" + state,
-                    UriKind.Relative);
+                return uri;
             }
-            return uri;
+            else if (tempUri.Contains(UserAppResources.QuizletInternalRedirectUri))
+            {
+                string[] queryString = tempUri.Split(new char[] { '?' }, 3);
+                string nextUri = URI_MAIN;
+                if (queryString.Length == 3)
+                {
+                    nextUri += "?" + queryString[2];
+                }
+                return new Uri(nextUri, UriKind.Relative);
+            }
+            else
+            {
+                App app = App.Current as App;
+                QuizBitSession session = app.session;
+                if (session.HasQuizletAccessToken() && session.GetQuizletAccessToken().IsValid())
+                {
+                    return uri;
+                }
+                else
+                {
+                    return new Uri(URI_SIGNIN, UriKind.Relative);
+                }
+            }
         }
     }
 }
