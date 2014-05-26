@@ -8,6 +8,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using QuizBit.Resources;
 using System.IO.IsolatedStorage;
+using QuizBit.Quizlet;
 
 namespace QuizBit
 {
@@ -19,8 +20,8 @@ namespace QuizBit
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
 
-        internal QuizletAuthService authService;
-        internal QuizBitSession session;
+        internal AuthService authService;
+        internal Session session;
 
         /// <summary>
         /// Constructor for the Application object.
@@ -116,8 +117,9 @@ namespace QuizBit
             if (phoneApplicationInitialized)
                 return;
 
-            session = new QuizBitSession(IsolatedStorageSettings.ApplicationSettings);
-            authService = new QuizletAuthService(
+            IDataProvider sessionDataProvider = new IsolatedStorageDataProvider();
+            session = new Session(sessionDataProvider);
+            authService = new AuthService(
                 UserAppResources.QuizletClientID,
                 UserAppResources.QuizletSecret,
                 UserAppResources.QuizletScope);
@@ -129,8 +131,6 @@ namespace QuizBit
             RootFrame.UriMapper = new AssociationUriMapper();
 
             InitializeComponent();
-
-
 
             RootFrame.Navigated += CompleteInitializePhoneApplication;
 

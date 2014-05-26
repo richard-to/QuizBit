@@ -5,6 +5,7 @@ using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuizBit.Quizlet;
 
 namespace QuizBit
 {
@@ -33,8 +34,8 @@ namespace QuizBit
             else
             {
                 App app = App.Current as App;
-                QuizBitSession session = app.session;
-                if (session.HasQuizletAccessToken() && session.GetQuizletAccessToken().IsValid())
+                Session session = app.session;
+                if (session.HasAccessToken())
                 {
                     return uri;
                 }

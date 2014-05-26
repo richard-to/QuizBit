@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,9 +7,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizBit
+namespace QuizBit.Quizlet
 {
-    class QuizletAccessTokenRequest
+    class AccessTokenRequest
     {
         public const string OAUTH_TOKEN_URI = "https://api.quizlet.com/oauth/token";
         public const string POST_DATA = "grant_type=authorization_code&code={0}&redirect_uri={1}";
@@ -22,7 +23,7 @@ namespace QuizBit
         private string _code;
         private string _redirectUri;
 
-        public QuizletAccessTokenRequest(string clientID, string secret, string code, string redirectUri)
+        public AccessTokenRequest(string clientID, string secret, string code, string redirectUri)
         {
             _clientID = clientID;
             _secret = secret;
@@ -30,7 +31,7 @@ namespace QuizBit
             _redirectUri = redirectUri;
         }
 
-        public void Send(Action<QuizletAccessToken> callback)
+        public void Send(Action<AccessToken> callback)
         {
             System.Uri oauthUri = new System.Uri(OAUTH_TOKEN_URI);
             HttpWebRequest tokenRequest = (HttpWebRequest)HttpWebRequest.Create(oauthUri);
@@ -48,12 +49,12 @@ namespace QuizBit
 
         private void GetRequestStreamCallback(IAsyncResult result)
         {
-            Tuple<HttpWebRequest, string, string, Action<QuizletAccessToken>> resultTuple =
-                (Tuple<HttpWebRequest, string, string, Action<QuizletAccessToken>>)result.AsyncState;
+            Tuple<HttpWebRequest, string, string, Action<AccessToken>> resultTuple =
+                (Tuple<HttpWebRequest, string, string, Action<AccessToken>>)result.AsyncState;
             HttpWebRequest tokenRequest = resultTuple.Item1;
             string code = resultTuple.Item2;
             string redirectUri = resultTuple.Item3;
-            Action<QuizletAccessToken> callback = resultTuple.Item4;
+            Action<AccessToken> callback = resultTuple.Item4;
 
             Stream postStream = tokenRequest.EndGetRequestStream(result);
 
@@ -68,11 +69,11 @@ namespace QuizBit
 
         private void GetResponseStreamCallback(IAsyncResult result)
         {
-            Tuple<HttpWebRequest, Action<QuizletAccessToken>> resultTuple = 
-                (Tuple<HttpWebRequest, Action<QuizletAccessToken>>)result.AsyncState;
+            Tuple<HttpWebRequest, Action<AccessToken>> resultTuple = 
+                (Tuple<HttpWebRequest, Action<AccessToken>>)result.AsyncState;
             HttpWebRequest request = resultTuple.Item1;
-            Action<QuizletAccessToken> callback = resultTuple.Item2;
-            QuizletAccessToken oauthToken = new QuizletAccessToken();
+            Action<AccessToken> callback = resultTuple.Item2;
+            AccessToken oauthToken = new AccessToken();
 
             try
             {
@@ -84,44 +85,17 @@ namespace QuizBit
             callback(oauthToken);
         }
 
-        public QuizletAccessToken createAccessTokenFromResponse(HttpWebResponse response)
+        public AccessToken createAccessTokenFromResponse(HttpWebResponse response)
         {
-            QuizletAccessToken oauthToken = new QuizletAccessToken();
+            AccessToken accessToken = null;
             try
             {
                 StreamReader httpWebStreamReader = new StreamReader(response.GetResponseStream());
                 string responseText = httpWebStreamReader.ReadToEnd();
-                char[] uriDelimiters = { '{', ':', '}', '"', ',' };
-                string[] data = responseText.Split(uriDelimiters);
-                
-                string lastValue = "";
-                string accessToken = null;
-                string userID = null;
-
-                foreach (string value in data)
-                {
-                    if (lastValue.Equals(ACCESS_TOKEN_KEY) && !string.IsNullOrEmpty(value))
-                    {
-                        accessToken = lastValue = value;
-                    }
-                    else if (lastValue.Equals(USER_ID_KEY) && !string.IsNullOrEmpty(value))
-                    {
-                        userID = lastValue = value;
-                    }
-                    else if (!string.IsNullOrEmpty(value))
-                    {
-                        lastValue = value;
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(userID))
-                {
-                    oauthToken.AccessToken = accessToken;
-                    oauthToken.UserID = userID;
-                }
+                accessToken = JsonConvert.DeserializeObject<AccessToken>(responseText);
             }
             catch (System.Net.WebException) {}
-            return oauthToken;
+            return accessToken;
         }
     }
 }

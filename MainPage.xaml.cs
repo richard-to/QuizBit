@@ -11,6 +11,7 @@ using QuizBit.Resources;
 using System.Text;
 using System.IO;
 using Microsoft.Phone.Tasks;
+using QuizBit.Quizlet;
 
 namespace QuizBit
 {
@@ -22,10 +23,24 @@ namespace QuizBit
             InitializeComponent();
 
             App app = App.Current as App;
-            QuizBitSession session = app.session;
-            if (session.HasQuizletAccessToken() && session.GetQuizletAccessToken().IsValid())
+            Session session = app.session;
+            if (session.HasAccessToken())
             {
-                SubHeader.Text = session.GetQuizletAccessToken().UserID;
+                AccessToken accessToken = session.GetAccessToken();
+                SubHeader.Text = accessToken.Me;
+
+                if (!session.HasUser())
+                {
+                    ApiService apiService = new ApiService(accessToken);
+                    Action<User> callback = OnFetchUserSuccess;
+                    ApiRequest<User> request = apiService.fetchUser();
+                    request.Send(callback);
+                }
+                else
+                {
+                    User user = session.GetUser();
+                    FlashcardSets.ItemsSource = user.Sets;
+                }
             }
         }
 
@@ -35,32 +50,46 @@ namespace QuizBit
             if (NavigationContext.QueryString.ContainsKey("code") && NavigationContext.QueryString.ContainsKey("state"))
             {
                 App app = App.Current as App;
-                QuizletAuthService authService = app.authService;
-                QuizBitSession session = app.session;
+                AuthService authService = app.authService;
+                Session session = app.session;
 
                 string state = NavigationContext.QueryString["state"];
                 string code = NavigationContext.QueryString["code"];
 
-                if (session.HasQuizletAuthState() && authService.IsValidCode(state, session.GetQuizletAuthState()))
+                if (session.HasAuthState() && authService.IsValidCode(state, session.GetAuthState()))
                 {
-                    QuizletAccessTokenRequest tokenRequest = authService.CreateAccessTokenRequest(code, UserAppResources.QuizletRedirectUri);
-                    Action<QuizletAccessToken> callback = OnAuthorizationSuccess;
+                    AccessTokenRequest tokenRequest = authService.CreateAccessTokenRequest(code, UserAppResources.QuizletRedirectUri);
+                    Action<AccessToken> callback = OnAuthorizationSuccess;
                     tokenRequest.Send(callback);
                 }
-                session.ClearQuizletAuthState();
+                session.ClearAuthState();
             }
         }
 
-        private void OnAuthorizationSuccess(QuizletAccessToken token)
+        private void OnFetchUserSuccess(User user)
         {
-            if (token.IsValid())
+            if (user != null)
+            {
+                App app = App.Current as App;
+                Session session = app.session;
+                session.SaveUser(user);
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    FlashcardSets.ItemsSource = user.Sets;
+                });
+            }
+        }
+
+        private void OnAuthorizationSuccess(AccessToken accessToken)
+        {
+            if (accessToken != null)
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
                     App app = App.Current as App;
-                    QuizBitSession session = app.session;
-                    SubHeader.Text = token.UserID;
-                    session.SaveQuizletAccessToken(token);
+                    Session session = app.session;
+                    SubHeader.Text = accessToken.Me;
+                    session.SaveAccessToken(accessToken);
                 });
             }
         }

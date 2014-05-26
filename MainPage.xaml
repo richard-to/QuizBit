@@ -13,6 +13,15 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="FlashcardSetTemplate">
+            <StackPanel VerticalAlignment="Top" Margin="0,0,0,15">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource PhoneTextTitle2Style}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding TermCount, StringFormat='(\{0\} terms)'}" Style="{StaticResource PhoneTextSubtleStyle}" />
+            </StackPanel>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -46,7 +55,14 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"/>
+        <phone:LongListSelector
+            Name="FlashcardSets"
+            ItemTemplate="{StaticResource FlashcardSetTemplate}" 
+            Height="595" 
+            Margin="12,0,10,0" 
+            VerticalAlignment="Top"
+            LayoutMode="List"
+            Grid.Row="1"/>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are
             aligned on common boundaries.  The image has a top margin of -32px to

@@ -5,9 +5,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizBit
+namespace QuizBit.Quizlet
 {
-    class QuizletAuthService
+    class AuthService
     {
         public const string USER_AUTH_URI = "https://quizlet.com/authorize?response_type=code&client_id={0}&scope={1}&state={2}";
         public const string STATE_PARAM = "state";
@@ -17,7 +17,7 @@ namespace QuizBit
         private string _secret;
         private string _scope;
 
-        public QuizletAuthService(string clientID, string secret, string scope)
+        public AuthService(string clientID, string secret, string scope)
         {
             _clientID = clientID;
             _secret = secret;
@@ -42,9 +42,9 @@ namespace QuizBit
             return givenState.Equals(expectedState);
         }
 
-        public QuizletAccessTokenRequest CreateAccessTokenRequest(string code, string redirectUri)
+        public AccessTokenRequest CreateAccessTokenRequest(string code, string redirectUri)
         {
-            return new QuizletAccessTokenRequest(_clientID, _secret, code, redirectUri);          
+            return new AccessTokenRequest(_clientID, _secret, code, redirectUri);          
         }
     }
 }

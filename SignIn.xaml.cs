@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using QuizBit.Quizlet;
 
 namespace QuizBit
 {
@@ -21,11 +22,11 @@ namespace QuizBit
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             App app = App.Current as App;
-            QuizletAuthService authService = app.authService;
-            QuizBitSession session = app.session;
+            AuthService authService = app.authService;
+            Session session = app.session;
 
             string state = authService.GenerateState();
-            session.SaveQuizletAuthState(state);
+            session.SaveAuthState(state);
 
             WebBrowserTask task = new WebBrowserTask();
             task.Uri = authService.CreateUserAuthUri(state);

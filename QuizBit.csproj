@@ -94,15 +94,21 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AssociationUriMapper.cs" />
+    <Compile Include="IDataProvider.cs" />
+    <Compile Include="IsolatedStorageDataProvider.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuizletAccessToken.cs" />
-    <Compile Include="QuizletAccessTokenRequest.cs" />
-    <Compile Include="QuizletAuthService.cs" />
-    <Compile Include="QuizBitSession.cs" />
+    <Compile Include="Quizlet\AccessToken.cs" />
+    <Compile Include="Quizlet\AccessTokenRequest.cs" />
+    <Compile Include="Quizlet\ApiRequest.cs" />
+    <Compile Include="Quizlet\ApiService.cs" />
+    <Compile Include="Quizlet\AuthService.cs" />
+    <Compile Include="Quizlet\FlashcardSetMeta.cs" />
+    <Compile Include="Quizlet\User.cs" />
+    <Compile Include="Quizlet\Session.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -132,6 +138,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
@@ -167,6 +174,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserAppResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
