@@ -12,6 +12,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Phone.Tasks;
 using QuizBit.Quizlet;
+using System.Windows.Media.Imaging;
 
 namespace QuizBit
 {
@@ -39,6 +40,9 @@ namespace QuizBit
                 else
                 {
                     User user = session.GetUser();
+                    BitmapImage image = new BitmapImage(new Uri(user.ProfileImage, UriKind.Absolute));
+                    ProfileImage.Source = image;
+                    ProfileImage.Visibility = System.Windows.Visibility.Visible;
                     FlashcardSets.ItemsSource = user.Sets;
                 }
             }

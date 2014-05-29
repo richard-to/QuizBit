@@ -50,7 +50,14 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Name="SubHeader" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" />
+            <StackPanel Orientation="Horizontal">
+                <Image Name="ProfileImage" Visibility="Collapsed" Margin="12,0,0,0" Height="26" Width="26">
+                    <Image.Clip>
+                        <EllipseGeometry Center="13,13" RadiusX="13" RadiusY="13" />
+                    </Image.Clip>
+                </Image>
+                <TextBlock Name="SubHeader" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" />
+            </StackPanel>
             <TextBlock Text="Home" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
