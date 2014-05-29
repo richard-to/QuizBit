@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuizBit.Quizlet
 {
-    class FlashcardSet
+    class Set
     {
         [JsonProperty("id")]
         public int ID { get; set; }
@@ -26,5 +26,8 @@ namespace QuizBit.Quizlet
 
         [JsonProperty("modified_date")]
         public int ModifiedDate { get; set; }
+
+        [JsonProperty("terms")]
+        public List<Term> Terms { get; set; }
     }
 }

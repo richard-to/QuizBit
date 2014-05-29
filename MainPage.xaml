@@ -14,7 +14,7 @@
     shell:SystemTray.IsVisible="True">
 
     <phone:PhoneApplicationPage.Resources>
-        <DataTemplate x:Key="FlashcardSetTemplate">
+        <DataTemplate x:Key="DataTemplateSetItem">
             <StackPanel VerticalAlignment="Top" Margin="0,0,0,15">
             <TextBlock Text="{Binding Title}" Style="{StaticResource PhoneTextTitle2Style}" TextWrapping="Wrap" />
             <TextBlock Text="{Binding TermCount, StringFormat='(\{0\} terms)'}" Style="{StaticResource PhoneTextSubtleStyle}" />
@@ -63,12 +63,13 @@
 
         <!--ContentPanel - place additional content here-->
         <phone:LongListSelector
-            Name="FlashcardSets"
-            ItemTemplate="{StaticResource FlashcardSetTemplate}" 
+            Name="LLS_Sets"
+            ItemTemplate="{StaticResource DataTemplateSetItem}" 
             Height="595" 
             Margin="12,0,10,0" 
             VerticalAlignment="Top"
             LayoutMode="List"
+            SelectionChanged="LLS_Sets_SelectionChanged"
             Grid.Row="1"/>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are

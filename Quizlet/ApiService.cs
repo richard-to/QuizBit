@@ -10,6 +10,7 @@ namespace QuizBit.Quizlet
     {
         public const string API_BASE_ENDPOINT = "https://api.quizlet.com/2.0/";
         public const string API_USER_ENDPOINT = API_BASE_ENDPOINT + "users/{0}";
+        public const string API_SET_TERMS_ENDPOINT = API_BASE_ENDPOINT + "sets/{0}";
 
         private AccessToken _accessToken;
 
@@ -23,6 +24,13 @@ namespace QuizBit.Quizlet
             return new ApiRequest<User>(
                 _accessToken, 
                 string.Format(API_USER_ENDPOINT, _accessToken.Me));
+        }
+
+        public ApiRequest<Set> fetchSetTerms(String setID)
+        {
+            return new ApiRequest<Set>(
+                _accessToken,
+                string.Format(API_SET_TERMS_ENDPOINT, setID));
         }
     }
 }

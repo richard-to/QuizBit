@@ -22,6 +22,6 @@ namespace QuizBit.Quizlet
         public string ProfileImage { get; set; }
 
         [JsonProperty("sets")]
-        public List<FlashcardSet> Sets { get; set; }
+        public List<Set> Sets { get; set; }
     }
 }

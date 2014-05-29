@@ -18,7 +18,6 @@ namespace QuizBit
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        // Constructor
         public MainPage()
         {
             InitializeComponent();
@@ -43,7 +42,7 @@ namespace QuizBit
                     BitmapImage image = new BitmapImage(new Uri(user.ProfileImage, UriKind.Absolute));
                     ProfileImage.Source = image;
                     ProfileImage.Visibility = System.Windows.Visibility.Visible;
-                    FlashcardSets.ItemsSource = user.Sets;
+                    LLS_Sets.ItemsSource = user.Sets;
                 }
             }
         }
@@ -79,7 +78,7 @@ namespace QuizBit
                 session.SaveUser(user);
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    FlashcardSets.ItemsSource = user.Sets;
+                    LLS_Sets.ItemsSource = user.Sets;
                 });
             }
         }
@@ -96,6 +95,20 @@ namespace QuizBit
                     session.SaveAccessToken(accessToken);
                 });
             }
+        }
+
+        private void LLS_Sets_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if (LLS_Sets.SelectedItem == null)
+            {
+                return;
+            }
+
+            Set set = LLS_Sets.SelectedItem as Set;
+            String pageUri = string.Format("/SetPage.xaml?setID={0}", set.ID);
+            NavigationService.Navigate(new Uri(pageUri, UriKind.Relative));
+
+            LLS_Sets.SelectedItem = null;
         }
     }
 }

@@ -106,7 +106,8 @@
     <Compile Include="Quizlet\ApiRequest.cs" />
     <Compile Include="Quizlet\ApiService.cs" />
     <Compile Include="Quizlet\AuthService.cs" />
-    <Compile Include="Quizlet\FlashcardSetMeta.cs" />
+    <Compile Include="Quizlet\Set.cs" />
+    <Compile Include="Quizlet\Term.cs" />
     <Compile Include="Quizlet\User.cs" />
     <Compile Include="Quizlet\Session.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -122,6 +123,9 @@
     <Compile Include="SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SetPage.xaml.cs">
+      <DependentUpon>SetPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -133,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SignIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SetPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
