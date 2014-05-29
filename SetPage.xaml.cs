@@ -45,7 +45,7 @@ namespace QuizBit
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    SubHeader.Text = set.Title;
+                    SubHeader.Title = set.Title;
                     LLS_Terms.ItemsSource = set.Terms;
                 });
             }

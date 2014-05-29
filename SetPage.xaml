@@ -17,33 +17,40 @@
         <DataTemplate x:Key="DataTemplateTermItem">
             <StackPanel VerticalAlignment="Top" Margin="0,0,0,15">
                 <TextBlock Text="{Binding Value}" Style="{StaticResource PhoneTextTitle2Style}" TextWrapping="Wrap" />
-                <TextBlock Text="{Binding Definition}" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <TextBlock Text="{Binding Definition}" Style="{StaticResource PhoneTextSubtleStyle}" TextWrapping="Wrap" />
             </StackPanel>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Name="SubHeader" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" />
-            <TextBlock Text="Terms" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" TextWrapping="Wrap" />
-        </StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-        <phone:LongListSelector
-            Name="LLS_Terms"
-            ItemTemplate="{StaticResource DataTemplateTermItem}" 
-            Height="595" 
-            Margin="12,0,10,0" 
-            VerticalAlignment="Top"
-            LayoutMode="List"
-            Grid.Row="1"/>
+        <phone:Pivot Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}"  Name="SubHeader">
+            <phone:PivotItem Header="Terms">
+                <phone:LongListSelector
+                    Name="LLS_Terms"
+                    ItemTemplate="{StaticResource DataTemplateTermItem}" 
+                    Height="595" 
+                    Margin="12,0,10,0" 
+                    VerticalAlignment="Top"
+                    LayoutMode="List"
+                    Grid.Row="1"/>
+            </phone:PivotItem>
+            <phone:PivotItem Header="Set Info">
+                <StackPanel>
+                </StackPanel>
+            </phone:PivotItem>
+        </phone:Pivot>
     </Grid>
 
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/new.png" Text="add"/>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh.png" Text="refresh"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="Flashcards"/>
+                <shell:ApplicationBarMenuItem Text="Learn"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    
 </phone:PhoneApplicationPage>
